@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 
 /**
  * 认证服务器配置
@@ -46,5 +47,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .redirectUris("http://www.baidu.com")//配置redirect_uri，用于授权成功后跳转
                 .scopes("all")//配置申请的权限范围
                 .authorizedGrantTypes("authorization_code","password");//配置grant_type，表示授权类型
+        //如果有多个client，可以使用and()继续添加或者数据库获取
+    }
+
+    //允许资源服务调用校验
+    @Override
+    public void configure(final AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.allowFormAuthenticationForClients();
+        security.checkTokenAccess("isAuthenticated()");
     }
 }
